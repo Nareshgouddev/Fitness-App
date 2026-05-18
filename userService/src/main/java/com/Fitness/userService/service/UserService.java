@@ -12,6 +12,19 @@ public class UserService {
     @Autowired
     private UserRepository repository;
     public UserResponse getUserProfile(String userId) {
+        User user=repository.findById(userId)
+                .orElseThrow(()->new RuntimeException("User Not Found"));
+        UserResponse userResponse = new UserResponse();
+        userResponse.setKeycloakId(user.getKeycloakId());
+        userResponse.setId(user.getId());
+        userResponse.setPassword(user.getPassword());
+        userResponse.setEmail(user.getEmail());
+        userResponse.setFirstName(user.getFirstName());
+        userResponse.setLastName(user.getLastName());
+        userResponse.setCreatedAt(user.getCreatedAt());
+        userResponse.setUpdatedAt(user.getUpdatedAt());
+        return userResponse;
+
     }
 
     public UserResponse register(RegisterRequest request) {
@@ -35,7 +48,6 @@ public class UserService {
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         User savedUser = repository.save(user);
-
         UserResponse userResponse = new UserResponse();
         userResponse.setKeycloakId(savedUser.getKeycloakId());
         userResponse.setId(savedUser.getId());
